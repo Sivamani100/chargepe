@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SearchNormal1, Notification, Flash, GpsSlash, ArrowRight2 } from "iconsax-react";
+import { SearchNormal1, Notification, Flash, GpsSlash, ArrowRight2, Sun1, Moon, Add } from "iconsax-react";
 import StationCard from "@/components/stations/StationCard";
-import { mockStations } from "@/lib/mock-stations";
 import MapView from "@/components/map/MapView";
+import { useStations } from "@/hooks/useStations";
+import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 
 const Index = () => {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
-  const nearbyStations = mockStations.filter((s) => s.status !== "offline").slice(0, 3);
+  const { data: stations = [], isLoading } = useStations();
+  const { user, profile } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const nearbyStations = stations.filter((s) => s.status !== "offline").slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background">
@@ -20,19 +25,19 @@ const Index = () => {
             <span className="text-accent neon-glow-accent">PE</span>
           </h1>
           <p className="text-caption text-muted-foreground mt-0.5">
-            ⚡ EV Charging Intelligence
+            {profile?.full_name ? `Hey ${profile.full_name} ⚡` : "⚡ EV Charging Intelligence"}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/explore")}
-            className="p-2 brutal-card-accent"
-          >
-            <SearchNormal1 size={20} color="hsl(var(--foreground))" />
+        <div className="flex items-center gap-2">
+          <button onClick={toggleTheme} className="p-2 brutal-card">
+            {theme === "dark" ? (
+              <Sun1 size={20} color="hsl(var(--foreground))" />
+            ) : (
+              <Moon size={20} color="hsl(var(--foreground))" />
+            )}
           </button>
-          <button className="p-2 brutal-card relative">
-            <Notification size={20} color="hsl(var(--foreground))" />
-            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-destructive border-2 border-card" />
+          <button onClick={() => navigate("/explore")} className="p-2 brutal-card-accent">
+            <SearchNormal1 size={20} color="hsl(var(--foreground))" />
           </button>
         </div>
       </header>
@@ -40,16 +45,16 @@ const Index = () => {
       {/* Quick Stats */}
       <div className="px-4 mb-4 flex gap-3">
         <div className="flex-1 brutal-card p-3 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
             <Flash size={20} variant="Bold" color="hsl(var(--primary))" />
           </div>
           <div>
-            <p className="text-heading text-foreground font-bold">12</p>
-            <p className="text-caption text-muted-foreground">Stations Nearby</p>
+            <p className="text-heading text-foreground font-bold">{stations.length}</p>
+            <p className="text-caption text-muted-foreground">Stations</p>
           </div>
         </div>
         <div className="flex-1 brutal-card-accent p-3 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center">
             <GpsSlash size={20} variant="Bold" color="hsl(var(--accent))" />
           </div>
           <div>
@@ -63,54 +68,74 @@ const Index = () => {
       <div className="px-4 mb-4 flex gap-2">
         <button
           onClick={() => setViewMode("map")}
-          className={`flex-1 py-2 text-body font-bold rounded-lg border-brutal transition-all ${
+          className={`flex-1 py-2 text-body font-bold rounded-xl border border-border transition-all ${
             viewMode === "map"
               ? "bg-primary text-primary-foreground shadow-brutal"
               : "bg-card text-muted-foreground"
           }`}
         >
-          🗺 Map View
+          🗺 Map
         </button>
         <button
           onClick={() => setViewMode("list")}
-          className={`flex-1 py-2 text-body font-bold rounded-lg border-brutal transition-all ${
+          className={`flex-1 py-2 text-body font-bold rounded-xl border border-border transition-all ${
             viewMode === "list"
               ? "bg-primary text-primary-foreground shadow-brutal"
               : "bg-card text-muted-foreground"
           }`}
         >
-          📋 List View
+          📋 List
         </button>
       </div>
 
       {/* Map or List */}
-      {viewMode === "map" ? (
+      {viewMode === "map" && (
         <div className="px-4 mb-4">
           <div className="brutal-card overflow-hidden" style={{ height: 280 }}>
-            <MapView stations={mockStations} />
+            {isLoading ? (
+              <div className="h-full flex items-center justify-center text-muted-foreground">Loading map...</div>
+            ) : (
+              <MapView stations={stations} />
+            )}
           </div>
         </div>
-      ) : null}
+      )}
 
       {/* Nearby Stations */}
       <div className="px-4 mb-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-subheading text-foreground font-bold">
-            ⚡ Nearby Stations
-          </h2>
-          <button
-            onClick={() => navigate("/explore")}
-            className="flex items-center gap-1 text-caption text-primary font-bold"
-          >
+          <h2 className="text-subheading text-foreground font-bold">⚡ Stations</h2>
+          <button onClick={() => navigate("/explore")} className="flex items-center gap-1 text-caption text-primary font-bold">
             See All <ArrowRight2 size={14} color="currentColor" />
           </button>
         </div>
-        <div className="space-y-3">
-          {(viewMode === "list" ? mockStations : nearbyStations).map((station) => (
-            <StationCard key={station.id} {...station} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="brutal-card p-8 text-center text-muted-foreground">Loading stations...</div>
+        ) : stations.length === 0 ? (
+          <div className="brutal-card p-8 text-center">
+            <p className="text-body text-muted-foreground">No stations yet. Be the first to add one!</p>
+            <button onClick={() => navigate("/add-station")} className="mt-3 brutal-btn bg-primary text-primary-foreground px-4 py-2 text-caption font-bold">
+              <Add size={16} className="inline mr-1" /> Add Station
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {(viewMode === "list" ? stations : nearbyStations).map((station) => (
+              <StationCard key={station.id} {...station} />
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* FAB */}
+      {user && (
+        <button
+          onClick={() => navigate("/add-station")}
+          className="fixed bottom-24 right-4 z-40 w-14 h-14 rounded-2xl bg-primary text-primary-foreground shadow-brutal flex items-center justify-center border border-border"
+        >
+          <Add size={28} color="currentColor" />
+        </button>
+      )}
     </div>
   );
 };

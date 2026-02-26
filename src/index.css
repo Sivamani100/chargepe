@@ -6,6 +6,56 @@
 
 @layer base {
   :root {
+    --background: 0 0% 97%;
+    --foreground: 0 0% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 187 100% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 155 80% 42%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 155 80% 42%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 33 100% 50%;
+    --warning-foreground: 0 0% 5%;
+
+    --border: 0 0% 82%;
+    --input: 0 0% 90%;
+    --ring: 187 100% 40%;
+
+    --radius: 10px;
+
+    --brutal-border: 2px;
+    --brutal-shadow-offset: 3px;
+    --brutal-shadow: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(var(--primary));
+    --brutal-shadow-accent: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(var(--accent));
+    --brutal-shadow-dark: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(0 0% 70%);
+
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 187 100% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 92%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 82%;
+    --sidebar-ring: 187 100% 40%;
+  }
+
+  .dark {
     --background: 0 0% 5.5%;
     --foreground: 0 0% 95%;
 
@@ -37,11 +87,10 @@
     --input: 0 0% 15%;
     --ring: 187 100% 45%;
 
-    --radius: 5px;
+    --radius: 10px;
 
-    /* Neo-brutalism tokens */
-    --brutal-border: 3px;
-    --brutal-shadow-offset: 4px;
+    --brutal-border: 2px;
+    --brutal-shadow-offset: 3px;
     --brutal-shadow: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(var(--primary));
     --brutal-shadow-accent: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(var(--accent));
     --brutal-shadow-dark: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(0 0% 0%);
@@ -70,7 +119,7 @@
 
 @layer utilities {
   .brutal-border {
-    border: var(--brutal-border) solid hsl(var(--foreground));
+    border: var(--brutal-border) solid hsl(var(--border));
   }
 
   .brutal-shadow {
@@ -86,41 +135,41 @@
   }
 
   .brutal-card {
-    border: var(--brutal-border) solid hsl(var(--foreground));
+    border: var(--brutal-border) solid hsl(var(--border));
     box-shadow: var(--brutal-shadow);
     border-radius: var(--radius);
     background: hsl(var(--card));
   }
 
   .brutal-card-accent {
-    border: var(--brutal-border) solid hsl(var(--foreground));
+    border: var(--brutal-border) solid hsl(var(--border));
     box-shadow: var(--brutal-shadow-accent);
     border-radius: var(--radius);
     background: hsl(var(--card));
   }
 
   .neon-glow {
-    text-shadow: 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3);
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.3);
   }
 
   .neon-glow-accent {
-    text-shadow: 0 0 10px hsl(var(--accent) / 0.5), 0 0 20px hsl(var(--accent) / 0.3);
+    text-shadow: 0 0 10px hsl(var(--accent) / 0.3);
   }
 
   .brutal-btn {
-    border: var(--brutal-border) solid hsl(var(--foreground));
+    border: var(--brutal-border) solid hsl(var(--border));
     box-shadow: var(--brutal-shadow);
     border-radius: var(--radius);
     transition: all 0.15s ease;
   }
 
   .brutal-btn:hover {
-    transform: translate(2px, 2px);
+    transform: translate(1px, 1px);
     box-shadow: 2px 2px 0px hsl(var(--primary));
   }
 
   .brutal-btn:active {
-    transform: translate(4px, 4px);
+    transform: translate(3px, 3px);
     box-shadow: 0px 0px 0px hsl(var(--primary));
   }
 
@@ -145,12 +194,12 @@
   }
 }
 
-/* Leaflet overrides for dark theme */
+/* Leaflet overrides */
 .leaflet-container {
   background: hsl(var(--background)) !important;
 }
 
-.leaflet-tile-pane {
+.dark .leaflet-tile-pane {
   filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(1.2);
 }
 
