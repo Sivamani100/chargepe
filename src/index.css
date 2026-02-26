@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 97%;
+    --background: 142 76% 50%;
     --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
@@ -15,44 +15,44 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
 
-    --primary: 187 100% 40%;
+    --primary: 142 76% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 155 80% 42%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 60 100% 50%;
+    --secondary-foreground: 0 0% 10%;
 
     --muted: 0 0% 92%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 155 80% 42%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 10%;
 
     --destructive: 0 85% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --warning: 33 100% 50%;
+    --warning: 60 100% 50%;
     --warning-foreground: 0 0% 5%;
 
-    --border: 0 0% 82%;
+    --border: 0 0% 0%;
     --input: 0 0% 90%;
-    --ring: 187 100% 40%;
+    --ring: 142 76% 50%;
 
-    --radius: 10px;
+    --radius: 0px;
 
-    --brutal-border: 2px;
-    --brutal-shadow-offset: 3px;
-    --brutal-shadow: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(var(--primary));
+    --brutal-border: 3px;
+    --brutal-shadow-offset: 4px;
+    --brutal-shadow: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(var(--foreground));
     --brutal-shadow-accent: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(var(--accent));
     --brutal-shadow-dark: var(--brutal-shadow-offset) var(--brutal-shadow-offset) 0px hsl(0 0% 70%);
 
-    --sidebar-background: 0 0% 97%;
+    --sidebar-background: 142 76% 50%;
     --sidebar-foreground: 0 0% 10%;
-    --sidebar-primary: 187 100% 40%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 92%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 60 100% 50%;
     --sidebar-accent-foreground: 0 0% 10%;
-    --sidebar-border: 0 0% 82%;
-    --sidebar-ring: 187 100% 40%;
+    --sidebar-border: 0 0% 0%;
+    --sidebar-ring: 142 76% 50%;
   }
 
   .dark {
@@ -87,7 +87,7 @@
     --input: 0 0% 15%;
     --ring: 187 100% 45%;
 
-    --radius: 10px;
+    --radius: 0px;
 
     --brutal-border: 2px;
     --brutal-shadow-offset: 3px;
@@ -139,6 +139,12 @@
     box-shadow: var(--brutal-shadow);
     border-radius: var(--radius);
     background: hsl(var(--card));
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .brutal-card:hover {
+    transform: translateY(-2px) translateX(2px);
+    box-shadow: 6px 6px 0px hsl(var(--foreground));
   }
 
   .brutal-card-accent {
@@ -146,6 +152,12 @@
     box-shadow: var(--brutal-shadow-accent);
     border-radius: var(--radius);
     background: hsl(var(--card));
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .brutal-card-accent:hover {
+    transform: translateY(-2px) translateX(2px);
+    box-shadow: 6px 6px 0px hsl(var(--accent));
   }
 
   .neon-glow {
@@ -160,7 +172,27 @@
     border: var(--brutal-border) solid hsl(var(--border));
     box-shadow: var(--brutal-shadow);
     border-radius: var(--radius);
-    transition: all 0.15s ease;
+    transition: all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .brutal-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .brutal-btn:hover::before {
+    left: 100%;
   }
 
   .brutal-btn:hover {
@@ -171,6 +203,100 @@
   .brutal-btn:active {
     transform: translate(3px, 3px);
     box-shadow: 0px 0px 0px hsl(var(--primary));
+  }
+
+  .brutal-btn-accent {
+    border: var(--brutal-border) solid hsl(var(--border));
+    box-shadow: var(--brutal-shadow-accent);
+    border-radius: var(--radius);
+    transition: all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .brutal-btn-accent:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px hsl(var(--accent));
+  }
+
+  .brutal-btn-accent:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px hsl(var(--accent));
+  }
+
+  /* Loading animations */
+  @keyframes pulse-brutal {
+    0%, 100% { 
+      opacity: 1; 
+      transform: scale(1);
+    }
+    50% { 
+      opacity: 0.7; 
+      transform: scale(0.98);
+    }
+  }
+
+  @keyframes slide-up-brutal {
+    from { 
+      opacity: 0; 
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shake-brutal {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+  }
+
+  .animate-pulse-brutal {
+    animation: pulse-brutal 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up-brutal 0.3s ease-out;
+  }
+
+  .animate-shake {
+    animation: shake-brutal 0.3s ease-in-out;
+  }
+
+  /* Interactive feedback */
+  .interactive-scale {
+    transition: transform 0.1s ease;
+  }
+
+  .interactive-scale:active {
+    transform: scale(0.95);
+  }
+
+  /* Status animations */
+  .status-available {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    position: relative;
+    overflow: hidden;
+  }
+
+  .status-available::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
   }
 
   .status-available {

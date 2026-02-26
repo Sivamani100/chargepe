@@ -31,7 +31,7 @@ const StationCard = ({
   return (
     <button
       onClick={() => navigate(`/station/${id}`)}
-      className="w-full text-left brutal-card p-4 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-brutal-none transition-all"
+      className="w-full text-left brutal-card p-4 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-brutal-none transition-all animate-slide-up interactive-scale"
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
@@ -41,7 +41,7 @@ const StationCard = ({
             <span className="text-caption truncate">{address}</span>
           </div>
         </div>
-        <span className={`text-caption font-bold px-2 py-1 rounded-lg ${statusInfo.class}`}>
+        <span className={`text-caption font-bold px-2 py-1 ${statusInfo.class} animate-pulse-brutal`}>
           {statusInfo.label}
         </span>
       </div>

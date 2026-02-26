@@ -72,19 +72,24 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0px",
+        md: "0px",
+        sm: "0px",
+        xl: "0px",
+        "2xl": "0px",
       },
       borderWidth: {
         brutal: "3px",
+        "brutal-lg": "4px",
       },
       boxShadow: {
         brutal: "var(--brutal-shadow)",
         "brutal-accent": "var(--brutal-shadow-accent)",
         "brutal-dark": "var(--brutal-shadow-dark)",
         "brutal-sm": "2px 2px 0px hsl(var(--primary))",
+        "brutal-lg": "6px 6px 0px hsl(var(--foreground))",
         "brutal-none": "0px 0px 0px hsl(var(--primary))",
+        "brutal-yellow": "4px 4px 0px hsl(60 100% 50%)",
       },
       keyframes: {
         "accordion-down": {

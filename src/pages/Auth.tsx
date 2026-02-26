@@ -51,7 +51,7 @@ const Auth = () => {
       {/* Logo */}
       <div className="mb-8 text-center">
         <div className="inline-flex items-center gap-2 mb-2">
-          <div className="w-12 h-12 rounded-lg bg-primary/20 brutal-border brutal-shadow flex items-center justify-center">
+          <div className="w-12 h-12 bg-primary/20 brutal-border brutal-shadow flex items-center justify-center">
             <Flash size={28} variant="Bold" color="hsl(var(--primary))" />
           </div>
         </div>

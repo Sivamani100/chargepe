@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Flash, Location, Add } from "iconsax-react";
+import { ArrowLeft, Flash, Location, Add, Map1 } from "iconsax-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -9,6 +9,8 @@ const AddStation = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [form, setForm] = useState({
     name: "",
     address: "",
@@ -23,6 +25,45 @@ const AddStation = () => {
   });
 
   const update = (key: string, val: string) => setForm((f) => ({ ...f, [key]: val }));
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setSelectedLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+          setForm((f) => ({
+            ...f,
+            latitude: position.coords.latitude.toString(),
+            longitude: position.coords.longitude.toString()
+          }));
+          toast.success("Location detected! 📍");
+        },
+        (error) => {
+          toast.error("Could not get location. Please enable location services.");
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by your browser");
+    }
+  };
+
+  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const lat = 12.9716 - (y - rect.height / 2) * 0.01; // Rough conversion for demo
+    const lng = 77.5946 + (x - rect.width / 2) * 0.01; // Rough conversion for demo
+    setSelectedLocation({ lat, lng });
+    setForm((f) => ({
+      ...f,
+      latitude: lat.toString(),
+      longitude: lng.toString()
+    }));
+    setShowMapPicker(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +110,7 @@ const AddStation = () => {
         <button onClick={() => navigate(-1)} className="p-2 brutal-card">
           <ArrowLeft size={20} color="hsl(var(--foreground))" />
         </button>
-        <h1 className="text-subheading text-foreground font-bold">Add Charging Station</h1>
+        <h1 className="text-subheading text-foreground font-bold">Add Charging Station - ChargePe</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="px-4 pb-6 space-y-3">
@@ -93,29 +134,60 @@ const AddStation = () => {
           />
         </div>
 
-        <div className="flex gap-3">
-          <div className="flex-1 brutal-card p-3">
-            <label className="text-caption text-muted-foreground block mb-1">Latitude *</label>
-            <input
-              type="number"
-              step="any"
-              value={form.latitude}
-              onChange={(e) => update("latitude", e.target.value)}
-              className="w-full bg-transparent outline-none text-body text-foreground"
-              placeholder="12.9716"
-            />
+        <div className="brutal-card p-3">
+          <label className="text-caption text-muted-foreground block mb-1">Station Location *</label>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setShowMapPicker(true)}
+              className="flex-1 brutal-card p-3 text-left interactive-scale"
+            >
+              <div className="flex items-center gap-2">
+                <Map1 size={16} color="hsl(var(--primary))" />
+                <div>
+                  {selectedLocation ? (
+                    <span className="text-body text-foreground">
+                      📍 {selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}
+                    </span>
+                  ) : (
+                    <span className="text-caption text-muted-foreground">
+                      Click map to set location
+                    </span>
+                  )}
+                </div>
+              </div>
+            </button>
+            <button
+              type="button"
+              onClick={getCurrentLocation}
+              className="flex-1 brutal-card-accent p-3 text-left interactive-scale"
+            >
+              <div className="flex items-center gap-2">
+                <div
+                  style={{
+                    width: "28px",
+                    height: "28px",
+                    background: "hsl(var(--accent))",
+                    border: "3px solid #fff",
+                    borderRadius: "50%",
+                    boxShadow: "0 0 10px hsl(var(--accent))",
+                  }}
+                >
+                  <span style={{ fontSize: "12px" }}>⚡</span>
+                </div>
+                <span className="text-body text-accent-foreground">
+                  Use current location
+                </span>
+              </div>
+            </button>
           </div>
-          <div className="flex-1 brutal-card p-3">
-            <label className="text-caption text-muted-foreground block mb-1">Longitude *</label>
-            <input
-              type="number"
-              step="any"
-              value={form.longitude}
-              onChange={(e) => update("longitude", e.target.value)}
-              className="w-full bg-transparent outline-none text-body text-foreground"
-              placeholder="77.5946"
-            />
-          </div>
+          {selectedLocation && (
+            <div className="mt-2 p-2 bg-accent/10 border border-border">
+              <p className="text-caption text-muted-foreground">
+                📍 Selected: {selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="flex gap-3">
@@ -147,7 +219,7 @@ const AddStation = () => {
                 key={ct}
                 type="button"
                 onClick={() => update("connector_type", ct)}
-                className={`px-3 py-1.5 text-caption font-bold rounded-xl border border-border ${
+                className={`px-3 py-1.5 text-caption font-bold border border-border ${
                   form.connector_type === ct
                     ? "bg-primary text-primary-foreground"
                     : "bg-card text-muted-foreground"
@@ -197,6 +269,57 @@ const AddStation = () => {
           {loading ? "Submitting..." : "Submit Station for Approval ⚡"}
         </button>
       </form>
+      
+      {showMapPicker && (
+        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-lg flex items-center justify-center p-4">
+          <div className="brutal-card p-6 max-w-md w-full">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-subheading text-foreground font-bold">Select Location</h3>
+              <button
+                onClick={() => setShowMapPicker(false)}
+                className="p-2 brutal-card interactive-scale"
+              >
+                <ArrowLeft size={20} color="hsl(var(--foreground))" />
+              </button>
+            </div>
+            <div 
+              className="w-full h-64 bg-card border border-border cursor-crosshair relative"
+              onClick={handleMapClick}
+            >
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="text-center">
+                  <div className="w-8 h-8 bg-primary/20 brutal-card flex items-center justify-center mb-2">
+                    <Location size={20} color="hsl(var(--primary))" />
+                  </div>
+                  <p className="text-caption text-muted-foreground">
+                    Click anywhere on the map
+                  </p>
+                  <p className="text-body text-foreground font-bold">
+                    {selectedLocation ? 
+                      `📍 ${selectedLocation.lat.toFixed(4)}, ${selectedLocation.lng.toFixed(4)}` : 
+                      "No location selected"
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => setShowMapPicker(false)}
+                className="flex-1 brutal-btn bg-card text-foreground py-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => setShowMapPicker(false)}
+                className="flex-1 brutal-btn bg-primary text-primary-foreground py-2"
+              >
+                Confirm Location
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

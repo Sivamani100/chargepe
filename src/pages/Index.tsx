@@ -16,27 +16,27 @@ const Index = () => {
   const nearbyStations = stations.filter((s) => s.status !== "offline").slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background animate-slide-up">
       {/* Header */}
       <header className="px-4 pt-6 pb-4 flex items-center justify-between">
         <div>
           <h1 className="text-heading text-foreground font-extrabold tracking-tight">
-            <span className="text-primary neon-glow">CHARGE</span>
+            <span className="text-foreground neon-glow">CHARGE</span>
             <span className="text-accent neon-glow-accent">PE</span>
           </h1>
           <p className="text-caption text-muted-foreground mt-0.5">
-            {profile?.full_name ? `Hey ${profile.full_name} ⚡` : "⚡ EV Charging Intelligence"}
+            {profile?.full_name ? `Hey ${profile.full_name} <Flash size={12} color="hsl(var(--accent))" />` : `<Flash size={12} color="hsl(var(--accent))" /> EV Charging Intelligence`}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={toggleTheme} className="p-2 brutal-card">
+          <button onClick={toggleTheme} className="p-2 brutal-card interactive-scale">
             {theme === "dark" ? (
               <Sun1 size={20} color="hsl(var(--foreground))" />
             ) : (
               <Moon size={20} color="hsl(var(--foreground))" />
             )}
           </button>
-          <button onClick={() => navigate("/explore")} className="p-2 brutal-card-accent">
+          <button onClick={() => navigate("/explore")} className="p-2 brutal-card-accent interactive-scale">
             <SearchNormal1 size={20} color="hsl(var(--foreground))" />
           </button>
         </div>
@@ -45,7 +45,7 @@ const Index = () => {
       {/* Quick Stats */}
       <div className="px-4 mb-4 flex gap-3">
         <div className="flex-1 brutal-card p-3 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+          <div className="w-10 h-10 bg-primary/15 flex items-center justify-center">
             <Flash size={20} variant="Bold" color="hsl(var(--primary))" />
           </div>
           <div>
@@ -54,7 +54,7 @@ const Index = () => {
           </div>
         </div>
         <div className="flex-1 brutal-card-accent p-3 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center">
+          <div className="w-10 h-10 bg-accent/15 flex items-center justify-center">
             <GpsSlash size={20} variant="Bold" color="hsl(var(--accent))" />
           </div>
           <div>
@@ -68,7 +68,7 @@ const Index = () => {
       <div className="px-4 mb-4 flex gap-2">
         <button
           onClick={() => setViewMode("map")}
-          className={`flex-1 py-2 text-body font-bold rounded-xl border border-border transition-all ${
+          className={`flex-1 py-2 text-body font-bold border border-border transition-all animate-slide-up ${
             viewMode === "map"
               ? "bg-primary text-primary-foreground shadow-brutal"
               : "bg-card text-muted-foreground"
@@ -78,7 +78,7 @@ const Index = () => {
         </button>
         <button
           onClick={() => setViewMode("list")}
-          className={`flex-1 py-2 text-body font-bold rounded-xl border border-border transition-all ${
+          className={`flex-1 py-2 text-body font-bold border border-border transition-all ${
             viewMode === "list"
               ? "bg-primary text-primary-foreground shadow-brutal"
               : "bg-card text-muted-foreground"
@@ -131,7 +131,7 @@ const Index = () => {
       {user && (
         <button
           onClick={() => navigate("/add-station")}
-          className="fixed bottom-24 right-4 z-40 w-14 h-14 rounded-2xl bg-primary text-primary-foreground shadow-brutal flex items-center justify-center border border-border"
+          className="fixed bottom-24 right-4 z-40 w-14 h-14 bg-primary text-primary-foreground shadow-brutal flex items-center justify-center border border-border"
         >
           <Add size={28} color="currentColor" />
         </button>

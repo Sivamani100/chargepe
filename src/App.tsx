@@ -28,13 +28,13 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/add-station" element={<AddStation />} />
               <Route element={<AppLayout />}>
                 <Route path="/" element={<Index />} />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/station/:id" element={<StationDetail />} />
                 <Route path="/bookings" element={<Bookings />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/add-station" element={<AddStation />} />
                 <Route path="/admin" element={<AdminDashboard />} />
               </Route>
               <Route path="*" element={<NotFound />} />
