@@ -13,6 +13,7 @@ import Bookings from "./pages/Bookings";
 import ProfilePage from "./pages/ProfilePage";
 import AddStation from "./pages/AddStation";
 import AdminDashboard from "./pages/AdminDashboard";
+import FeaturesPage from "./pages/FeaturesPage";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ const App = () => (
                 <Route path="/bookings" element={<Bookings />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/features" element={<FeaturesPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SearchNormal1, Notification, Flash, GpsSlash, ArrowRight2, Sun1, Moon, Add } from "iconsax-react";
+import { SearchNormal1, Notification, Flash, GpsSlash, ArrowRight2, Sun1, Moon, Add, Settings } from "iconsax-react";
 import StationCard from "@/components/stations/StationCard";
 import MapView from "@/components/map/MapView";
 import { useStations } from "@/hooks/useStations";
@@ -35,6 +35,9 @@ const Index = () => {
             ) : (
               <Moon size={20} color="hsl(var(--foreground))" />
             )}
+          </button>
+          <button onClick={() => navigate("/features")} className="p-2 brutal-card interactive-scale">
+            <Settings size={20} color="hsl(var(--foreground))" />
           </button>
           <button onClick={() => navigate("/explore")} className="p-2 brutal-card-accent interactive-scale">
             <SearchNormal1 size={20} color="hsl(var(--foreground))" />
